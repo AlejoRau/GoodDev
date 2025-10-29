@@ -4,8 +4,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from rich.console import Console
 from dotenv import load_dotenv
-from .utils import leer_archivo, limpiar_codigo, obtener_estructura_directorios
-from .utils import cargar_cache, guardar_cache, hash_string
+from .Utils.utils import leer_archivo, limpiar_codigo, obtener_estructura_directorios
+from .Utils.utils import cargar_cache, guardar_cache, hash_string
 from .analyzer import analizar_codigo
 
 # === CONFIGURACIÓN ===
@@ -24,9 +24,9 @@ genai.configure(api_key=API_KEY)
 def main():
     console.print("🚀 Iniciando DevGuardian: Auditor de código y arquitectura\n", style="bold cyan")
 
-    reglas = leer_archivo("src/rules.txt")
+    reglas = leer_archivo("src/Rules/rules.txt")
     codigo = leer_archivo("code.js")
-    contexto = leer_archivo("src/contexto.txt")
+    contexto = leer_archivo("src/Rules/contexto.txt")
 
     if not reglas or not codigo:
         console.print("❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
