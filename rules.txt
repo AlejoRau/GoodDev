@@ -1,0 +1,7 @@
+# Reglas internas del equipo
+
+# 1. Todas las clases de controladores deben terminar con "Controller".
+# 2. Los nombres de endpoints deben estar en plural.
+# 3. Los métodos deben retornar JSON siempre.
+# 4. Validaciones mínimas de datos en los endpoints POST y PUT.
+# 5. Cada clase de controlador debe tener un método de prueba unitario mínimo.
