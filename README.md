@@ -31,7 +31,7 @@ Sugerir automáticamente correcciones de código o mejoras en la estructura del 
 
 Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el tiempo.
 
-Integrarse completamente con GitHub Actions para actuar como un revisor de código inteligente, que no solo reporta problemas, sino que también propone soluciones.
+
 ---
 
 ## ⚙️ Flujo de Trabajo del Auditor
