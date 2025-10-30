@@ -62,13 +62,14 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          python3 -m src.GoodDev | tee pullrequest.log
+          python3 -m src.GoodDev | tee $GITHUB_WORKSPACE/pull_request.log
 
       - name: Subir log como artifact
         uses: actions/upload-artifact@v4
         with:
           name: pull_request_log
-          path: pull_request.log
+          path: ${{ github.workspace }}/pull_request.log
+          if-no-files-found: error
 
       - name: Comentar resultado en el PR
         if: always()
