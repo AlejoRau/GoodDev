@@ -5,7 +5,7 @@ Funciona como un **auditor inteligente**, capaz de evaluar código fuente, detec
 
 ---
 
-## 🚀 Función Principal
+##  Función Principal
 
 Cada vez que se crea o actualiza un **Pull Request**, GoodDev:
 
@@ -19,7 +19,7 @@ De esta forma, **los revisores humanos reciben un análisis técnico completo si
 
 ---
 
-Implementaciones Futuras
+## Implementaciones Futuras
 
 El objetivo a futuro es evolucionar hacia un agente autónomo ReAct, con capacidades de auditoría de código:
 
