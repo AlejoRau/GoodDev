@@ -34,13 +34,13 @@ class UserController {
       this.users[index] = req.body;
       res.send("Actualizado"); 
     } else {
-      res.send("No encontrado"); 
+      res.send("No encontradoo"); 
     }
   }
 
   deleteUser(req, res) {
     this.users = this.users.filter(u => u.id != req.params.id);
-    res.send("Usuario eliminado."); 
+    res.send("Usuario eliminadoo."); 
   }
 }
 

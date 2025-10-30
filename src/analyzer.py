@@ -3,49 +3,60 @@ import google.generativeai as genai
 def analizar_codigo(codigo, reglas, contexto, estructura, omitir_categorias):
     """
     Envía toda la información al modelo Gemini para que realice la auditoría.
+    Incluye revisión de buenas prácticas, estructura y documentación.
     """
-    modelo = genai.GenerativeModel("gemini-2.5-pro")
+    model = genai.GenerativeModel("gemini-2.5-pro")
 
     prompt = f"""
-    Eres GoodDev, un asistente experto en revisión de código, arquitectura y organización de proyectos.
-    Debes dar **respuestas breves y concisas**, no más de 5 líneas por cada observación. Al lado de las observaciones
-    negativas debes dar una sugerencia de reemplazo para el codigo que cumpla con las reglas de buenas
-    practicas , ya sea de la empresa o de la programacion en general.El orden de sugerencias/critica debe siempre ser 
-    rojo , amarillo y por ultimo verde , cuando digas que incumple una regla incluye lo que dice esa regla 
-    ,para que el desarrollador sea consciente de lo que hizo mal . Los puntos verdes deben ser sobre cosas generales 
-    , por ejemplo si hay 3 funciones que tienen mal colocado el nombre , 
-    no hace falta indicar que 1 sola funcion tiene bien su nombre , 
-    sino decir el resto de funciones tiene una nomenclatura correcta o hablar sobre generalidades
-    Debes revisar el proyecto considerando:
-    1. Las reglas internas del equipo (prioritarias)
-    2. Las buenas prácticas generales de programación y arquitectura
-    3. El contexto del proyecto (para entender su dominio y propósito)
-    4. La estructura de carpetas y archivos del proyecto
+Eres GoodDev, un asistente experto en revisión de código, arquitectura y organización de proyectos.
+Debes dar **respuestas breves y concisas**, no más de 5 líneas por cada observación. 
+Al lado de las observaciones negativas debes dar una sugerencia de reemplazo para el código que cumpla con las reglas de buenas prácticas,
+ya sea de la empresa o de la programación en general.
 
-    Tareas específicas:
-    - Analiza la organización de carpetas y archivos: nombres, agrupación, coherencia.
-    - Evalúa si la estructura refleja buenas prácticas (por ejemplo, separación por módulos, carpeta de tests, etc.).
-    - Revisa el código: nombres de clases, funciones, endpoints, convenciones.
-    - Si detectas líneas con "# devguardian: ignore", no las comentes.
-    - No hagas observaciones relacionadas con: {', '.join(omitir_categorias)}.
+El orden de observaciones debe ser:
+1️⃣ 🔴 Errores graves  
+2️⃣ 🟡 Advertencias o mejoras sugeridas  
+3️⃣ 🟢 Buenas prácticas cumplidas  
 
-    Clasifica tus observaciones usando emojis:
-    🔴 Error grave o mala práctica importante
-    🟡 Advertencia o mejora sugerida
-    🟢 Buena práctica cumplida
+Cada vez que digas que incumple una regla, **incluye el texto de la regla violada**.
+Los puntos verdes deben ser sobre generalidades, no sobre detalles individuales.
 
-    === CONTEXTO DEL PROYECTO ===
-    {contexto}
+Luego de revisar las buenas prácticas, **debes agregar una nueva sección obligatoria al final** titulada:
 
-    === REGLAS DEL EQUIPO ===
-    {reglas}
+📘 DOCUMENTACIÓN PROPUESTA
 
-    === ESTRUCTURA DE DIRECTORIOS ===
-    {estructura}
+En esa sección:
+- Si el código **no tiene documentación**, genera una propuesta de documentación completa siguiendo las reglas del equipo si existen, 
+  o el formato estándar de docstrings (Google o NumPy style).
+- Si la documentación **existe pero no cumple las reglas**, explica brevemente qué falla y muestra una versión corregida.
+- Si la documentación **ya es correcta**, escribe una breve frase que lo indique igualmente dentro de esa sección.
+- No omitas esta sección bajo ninguna circunstancia.
 
-    === CÓDIGO A ANALIZAR ===
-    {codigo}
-    """
+Debes revisar el proyecto considerando:
+1. Las reglas internas del equipo (prioritarias)
+2. Las buenas prácticas generales de programación y arquitectura
+3. El contexto del proyecto (para entender su dominio y propósito)
+4. La estructura de carpetas y archivos del proyecto
 
-    response = modelo.generate_content(prompt)
+No hagas observaciones relacionadas con: {', '.join(omitir_categorias)}.
+
+Clasifica tus observaciones usando emojis:
+🔴 Error grave o mala práctica importante  
+🟡 Advertencia o mejora sugerida  
+🟢 Buena práctica cumplida  
+
+=== CONTEXTO DEL PROYECTO ===
+{contexto}
+
+=== REGLAS DEL EQUIPO ===
+{reglas}
+
+=== ESTRUCTURA DE DIRECTORIOS ===
+{estructura}
+
+=== CÓDIGO A ANALIZAR ===
+{codigo}
+"""
+
+    response = model.generate_content(prompt)
     return response.text

@@ -1,0 +1,51 @@
+name: PR Analyzer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      
+name: Checkout código
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+      
+name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+      
+name: Instalar dependencias
+      run: |
+        pip install rich python-dotenv google-generativeai
+
+      
+name: Extraer diff del PR
+      run: |
+        git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }} > code.js
+
+      
+name: Configurar API Key
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      run: |
+        echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+
+      
+name: Ejecutar análisis
+      run: |
+        python3 src/GoodDev.py | tee pullrequest$(date +'%d-%m').log
+
+      
+name: Subir log como artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pull_request_log
+        path: pullrequest*.log

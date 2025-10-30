@@ -32,11 +32,7 @@ def main():
         console.print("❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
         return
 
-    # Preguntar por categorías a omitir
-    console.print("💬 ¿Querés omitir alguna categoría de revisión? (naming, docstring, seguridad, arquitectura)")
-    omitir_input = console.input("Escribí las categorías separadas por coma (o presioná Enter para ninguna): ")
-    omitir_categorias = [cat.strip() for cat in omitir_input.split(",") if cat.strip()]
-
+    
     # --- Bloque de análisis ---
     codigo_filtrado = limpiar_codigo(codigo)
     estructura = obtener_estructura_directorios(".")

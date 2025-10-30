@@ -1,35 +1,32 @@
-# Entorno virtual
+
 venv/
 .env
 
-# Cache de GoodDev
+
 .gooddev_cache.json
 
-# Python
+
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Logs y archivos temporales
+
 *.log
 *.tmp
 *.swp
 
-# Windows
 Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
-# IDEs y editores
 .vscode/
 .idea/
 *.sublime-workspace
 *.sublime-project
 
-# Node / JS (si llegás a agregar paquetes)
+
 node_modules/
 
-# Otros
 .DS_Store
