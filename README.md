@@ -19,19 +19,6 @@ De esta forma, **los revisores humanos reciben un análisis técnico completo si
 
 ---
 
-## ⚙️ Flujo de Trabajo del Auditor
-
-```mermaid
-flowchart TD
-    A[Creación o actualización de PR] --> B[GitHub Actions ejecuta el workflow]
-    B --> C[Se extrae el diff del código]
-    C --> D[Se envía el código a GoodDev.py]
-    D --> E[Analyzer analiza el código con IA]
-    E --> F[Auditor Corrector limpia y valida la respuesta]
-    F --> G[Se genera el informe final]
-    G --> H[El bot comenta automáticamente las sugerencias]
-
-
 Implementaciones Futuras
 
 El objetivo a futuro es evolucionar hacia un agente autónomo ReAct, con capacidades de auditoría de código:
@@ -45,3 +32,19 @@ Sugerir automáticamente correcciones de código o mejoras en la estructura del 
 Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el tiempo.
 
 Integrarse completamente con GitHub Actions para actuar como un revisor de código inteligente, que no solo reporta problemas, sino que también propone soluciones.
+---
+
+## ⚙️ Flujo de Trabajo del Auditor
+
+```mermaid
+flowchart TD
+    A[Creación o actualización de PR] --> B[GitHub Actions ejecuta el workflow]
+    B --> C[Se extrae el diff del código]
+    C --> D[Se envía el código a GoodDev.py]
+    D --> E[Analyzer analiza el código con IA]
+    E --> F[Auditor Corrector limpia y valida la respuesta]
+    F --> G[Se genera el informe final]
+    G --> H[El bot comenta automáticamente las sugerencias]
+
+
+
