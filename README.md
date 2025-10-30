@@ -33,7 +33,7 @@ flowchart TD
 
 ---
 
-##  Implementaciones Futuras
+  Implementaciones Futuras
 
 El objetivo a futuro es evolucionar hacia un **agente autónomo ReAct**, con capacidades de auditoría de código:
 
