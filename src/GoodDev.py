@@ -10,7 +10,8 @@ from .analyzer import analizar_codigo
 
 # === CONFIGURACIÓN ===
 load_dotenv()
-API_KEY = os.getenv("GOOGLE_API_KEY")
+#API_KEY = os.getenv("GOOGLE_API_KEY")
+API_KEY = "AIzaSyBTVGsfvoys5SIdzJDMRJ5_unUkR_2atyw"  # Clave fija para pruebas locales
 console = Console()
 
 if not API_KEY:
