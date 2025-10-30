@@ -29,4 +29,4 @@ flowchart TD
     D --> E[Analyzer analiza el código con IA]
     E --> F[Auditor Corrector limpia y valida la respuesta]
     F --> G[Se genera el informe final]
-    G --> H[El bot comenta automáticamente en el Pull Request]
+    G --> H[El bot comenta automáticamente las sugerencias]
