@@ -42,9 +42,8 @@ flowchart TD
     B --> C[Se extrae el diff del código]
     C --> D[Se envía el código a GoodDev.py]
     D --> E[Analyzer analiza el código con IA]
-    E --> F[Auditor Corrector limpia y valida la respuesta]
-    F --> G[Se genera el informe final]
-    G --> H[El bot comenta automáticamente las sugerencias]
+    E --> G[Se genera el informe final]
+    F --> H[El bot comenta automáticamente las sugerencias]
 
 
 
