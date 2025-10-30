@@ -1,7 +1,7 @@
-# 🧠 GoodDev — Auditor Inteligente de Pull Requests
+#  Auditor Inteligente de PR's
 
 **GoodDev** es un sistema automatizado de revisión de código que analiza los **Pull Requests** en GitHub para verificar el cumplimiento de buenas prácticas de desarrollo.  
-Funciona como un **auditor técnico inteligente**, capaz de evaluar código fuente, detectar problemas comunes y sugerir mejoras antes de que se apruebe la fusión.
+Funciona como un **auditor inteligente**, capaz de evaluar código fuente, detectar problemas comunes y sugerir mejoras antes de que se apruebe la fusión.
 
 ---
 
