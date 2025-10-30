@@ -14,6 +14,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configurar API Key
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
@@ -32,7 +38,7 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          python3 src/GoodDev.py | tee pull_request_$(date +'%d-%m').log
+          python3 -m src.GoodDev | tee pullrequest$(date +'%d-%m').log
 
       - name: Subir log como artifact
         uses: actions/upload-artifact@v4

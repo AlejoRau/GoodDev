@@ -28,7 +28,7 @@ def main():
     codigo = leer_archivo("code.js")
     contexto = leer_archivo("src/Rules/contexto.txt")
 
-    if not reglas or not codigo:
+    if not codigo:
         console.print("❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
         return
 
