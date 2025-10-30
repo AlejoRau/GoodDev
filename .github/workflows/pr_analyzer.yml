@@ -23,17 +23,15 @@ jobs:
         run: |
           pip install rich python-dotenv google-generativeai
 
-      - name: Extraer diff del PR
+      - name: Extraer diff del PR (robusto)
         run: |
-          git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }} > code.js
-
-      - name: Configurar API Key
-        env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+          git fetch origin
+          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
+          git diff origin/${{ github.base_ref }}...${{ github.event.pull_request.head.ref }} > code.js
 
       - name: Ejecutar análisis
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 src/GoodDev.py | tee pull_request_$(date +'%d-%m').log
 
@@ -41,4 +39,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pull_request_log
+          path: pull_request_*.log
+
+      - name: Comentar resultado en el PR
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
           path: pull_request_*.log
