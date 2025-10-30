@@ -14,7 +14,7 @@ class UserController {
   addUser(req, res) {
     const user = req.body; 
     this.users.push(user);
-    res.send("Usuario agregado"); 
+    res.send("Usuario agregadoo"); 
   }
 
   
@@ -32,9 +32,9 @@ class UserController {
     const index = this.users.findIndex(u => u.id == req.params.id);
     if (index != -1) {
       this.users[index] = req.body;
-      res.send("Actualizado"); 
+      res.send("Actualizadoo"); 
     } else {
-      res.send("No encontradoo"); 
+      res.send("No encontrado"); 
     }
   }
 

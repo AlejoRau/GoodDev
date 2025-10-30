@@ -23,7 +23,7 @@ import google.generativeai as genai
 genai.configure(api_key=API_KEY)
 
 def main():
-    console.print("🚀 Iniciando DevGuardian: Auditor de código y arquitectura\n", style="bold cyan")
+    console.print("🚀 Iniciando GoodDev: Auditor de código y arquitectura\n", style="bold cyan")
 
     reglas = leer_archivo("src/Rules/rules.txt")
     codigo = leer_archivo("code.js")
