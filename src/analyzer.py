@@ -32,6 +32,10 @@ En esa sección:
 - Si la documentación **ya es correcta**, escribe una breve frase que lo indique igualmente dentro de esa sección.
 - No omitas esta sección bajo ninguna circunstancia.
 
+Revision de ortografia:
+Luego de generar una respuesta debes revisar que tenga una correcta gramatica y que no estes generando caracteres que no deben ser incluidos.
+
+
 Debes revisar el proyecto considerando:
 1. Las reglas internas del equipo (prioritarias)
 2. Las buenas prácticas generales de programación y arquitectura

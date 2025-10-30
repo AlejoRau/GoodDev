@@ -40,7 +40,7 @@ class UserController {
 
   deleteUser(req, res) {
     this.users = this.users.filter(u => u.id != req.params.id);
-    res.send("Usuario eliminadoo."); 
+    res.send("Usuario eliminado."); 
   }
 }
 
