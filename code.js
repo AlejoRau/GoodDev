@@ -27,6 +27,10 @@ class UserController {
     res.send(user); 
   }
 
+  getUserById2(req, res) {
+    const user = this.users.find(u => u.id == req.params.id);
+    res.send(user); 
+  }
  
   updateUser(req, res) {
     const index = this.users.findIndex(u => u.id == req.params.id);
@@ -42,6 +46,7 @@ class UserController {
     this.users = this.users.filter(u => u.id != req.params.id);
     res.send("Usuario eliminadoo."); 
   }
+
 }
 
 const controller = new UserController();
