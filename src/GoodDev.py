@@ -47,7 +47,7 @@ def main():
         resultado = cache.get("analysis_result", "⚠️ No hay análisis previo guardado")
     else:
         console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
-        resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura, omitir_categorias)
+        resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura)
         
         # Guardar hash y resultado
         cache["code_hash"] = code_hash

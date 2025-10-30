@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-def analizar_codigo(codigo, reglas, contexto, estructura, omitir_categorias):
+def analizar_codigo(codigo, reglas, contexto, estructura):
     """
     Envía toda la información al modelo Gemini para que realice la auditoría.
     Incluye revisión de buenas prácticas, estructura y documentación.
@@ -38,7 +38,7 @@ Debes revisar el proyecto considerando:
 3. El contexto del proyecto (para entender su dominio y propósito)
 4. La estructura de carpetas y archivos del proyecto
 
-No hagas observaciones relacionadas con: {', '.join(omitir_categorias)}.
+
 
 Clasifica tus observaciones usando emojis:
 🔴 Error grave o mala práctica importante  
