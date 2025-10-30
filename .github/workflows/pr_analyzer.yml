@@ -25,9 +25,8 @@ jobs:
 
       - name: Extraer diff del PR (robusto)
         run: |
-          git fetch origin
-          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
-          git diff origin/${{ github.base_ref }}...${{ github.event.pull_request.head.ref }} > code.js
+          git fetch origin +refs/pull/${{ github.event.pull_request.number }}/merge
+          git diff FETCH_HEAD^ FETCH_HEAD > code.js
 
       - name: Ejecutar análisis
         env:
