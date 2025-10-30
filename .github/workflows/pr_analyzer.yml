@@ -63,13 +63,8 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 -m src.GoodDev | tee $GITHUB_WORKSPACE/pull_request.log
-             
-      - name: Comentar resultado en el PR
-        if: success()
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          path: pull_request.log
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+     
 
       - name: Subir log como artifact
         uses: actions/upload-artifact@v4
@@ -77,3 +72,6 @@ jobs:
           name: pull_request_log
           path: ${{ github.workspace }}/pull_request.log
           if-no-files-found: error
+
+      
+
