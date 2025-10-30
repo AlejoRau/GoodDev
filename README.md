@@ -1,4 +1,4 @@
-#  Auditor Inteligente de PR's
+# Auditor Inteligente de PR's
 
 **GoodDev** es un sistema automatizado de revisión de código que analiza los **Pull Requests** en GitHub para verificar el cumplimiento de buenas prácticas de desarrollo.  
 Funciona como un **auditor inteligente**, capaz de evaluar código fuente, detectar problemas comunes y sugerir mejoras antes de que se apruebe la fusión.
@@ -31,17 +31,17 @@ flowchart TD
     F --> G[Se genera el informe final]
     G --> H[El bot comenta automáticamente las sugerencias]
 
----
 
-  Implementaciones Futuras
+Implementaciones Futuras
 
-El objetivo a futuro es evolucionar hacia un **agente autónomo ReAct**, con capacidades de auditoría de código:
+El objetivo a futuro es evolucionar hacia un agente autónomo ReAct, con capacidades de auditoría de código:
 
-- Analizar PRs y repositorios completos de manera contextual, entendiendo la arquitectura del proyecto.
-- Aplicar razonamiento paso a paso combinando conocimiento técnico almacenado (RAG) y razonamiento dinámico (ReAct).
-- Sugerir automáticamente correcciones de código o mejoras en la estructura del proyecto.
-- Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el tiempo.
-- Integrarse completamente con GitHub Actions para actuar como un revisor de código inteligente, que no solo reporta problemas, sino que también propone soluciones.
+Analizar PRs y repositorios completos de manera contextual, entendiendo la arquitectura del proyecto.
 
+Aplicar razonamiento paso a paso combinando conocimiento técnico almacenado (RAG) y razonamiento dinámico (ReAct).
 
+Sugerir automáticamente correcciones de código o mejoras en la estructura del proyecto.
 
+Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el tiempo.
+
+Integrarse completamente con GitHub Actions para actuar como un revisor de código inteligente, que no solo reporta problemas, sino que también propone soluciones.
