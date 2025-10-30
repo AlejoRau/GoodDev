@@ -40,7 +40,7 @@ jobs:
           echo "== Fin del debug =="
       - name: Configurar API Key
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_API_KEY: 'AIzaSyBTVGsfvoys5SIdzJDMRJ5_unUkR_2atyw'
         run: |
           echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
 
