@@ -43,7 +43,7 @@ flowchart TD
     C --> D[Se envía el código a GoodDev.py]
     D --> E[Analyzer analiza el código con IA]
     E --> F[Se genera el informe final]
-    F --> [El bot comenta automáticamente las sugerencias]
+    F --> H[El bot comenta automáticamente las sugerencias]
 
 
 
