@@ -28,16 +28,7 @@ class UserController {
   }
 
  
-  updateUser(req, res) {
-    const index = this.users.findIndex(u => u.id == req.params.id);
-    if (index != -1) {
-      this.users[index] = req.body;
-      res.send("Actualizadoo"); 
-    } else {
-      res.send("No encontrados"); 
-    }
-  }
-
+ //DELETEUSER METHOD
   deleteUser(req, res) {
     this.users = this.users.filter(u => u.id != req.params.id);
     res.send("users eliminado."); 
