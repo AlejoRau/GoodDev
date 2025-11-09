@@ -4,62 +4,85 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# ✅ Permisos necesarios para que el bot pueda comentar en los PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout del código
+      - name: Checkout código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🐍 Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: ⚙️ Instalar dependencias
-        run: |
-          pip install rich python-dotenv google-generativeai
-
-      - name: 🧩 Debug seguro del entorno
+      - name: Debug API Key y entorno
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           echo "== Debug de entorno =="
           echo "Directorio actual: $(pwd)"
+          echo
           echo "Archivos en raíz:"
           ls -la
           echo
+          echo "Valor recibido en GOOGLE_API_KEY (solo longitud por seguridad):"
           if [ -z "$GOOGLE_API_KEY" ]; then
             echo "❌ GOOGLE_API_KEY está vacío"
-            exit 1
           else
-            echo "✅ GOOGLE_API_KEY cargada correctamente (longitud: ${#GOOGLE_API_KEY})"
+            echo "✅ GOOGLE_API_KEY tiene longitud ${#GOOGLE_API_KEY}"
           fi
+          echo
+          echo "Creando archivo .env..."
+          echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+          echo
+          echo "Contenido de .env:"
+          cat .env || echo "no se pudo leer"
+          echo
           echo "== Fin del debug =="
 
-      - name: 🧠 Extraer diff del PR
+      - name: Configurar API Key
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install rich python-dotenv google-generativeai
+
+      - name: Extraer diff del PR (robusto)
         run: |
           git fetch origin +refs/pull/${{ github.event.pull_request.number }}/merge
           git diff FETCH_HEAD^ FETCH_HEAD > code.js
+          echo "✅ Archivo code.js generado con el diff del PR"
 
-      - name: 🤖 Ejecutar análisis GoodDev
+      - name: Ejecutar análisis
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python3 -m src.GoodDev | tee $GITHUB_WORKSPACE/pull_request.log
 
-      - name: 📤 Subir log como artifact
+      - name: Subir log como artifact
         uses: actions/upload-artifact@v4
         with:
           name: pull_request_log
           path: ${{ github.workspace }}/pull_request.log
           if-no-files-found: error
 
-      - name: 💬 Comentar resultado en el PR
-        if: always()
+      # ✅ Nuevo paso para comentar el resultado en el PR
+      - name: Comentar resultado en el PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: ${{ github.workspace }}/pull_request.log
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
