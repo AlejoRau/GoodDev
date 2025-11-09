@@ -1,14 +1,16 @@
 import google.generativeai as genai
 
 def analizar_codigo(codigo, reglas, contexto, estructura):
- def analizar_codigo(codigo, reglas, contexto, estructura):
     """
     Envía toda la información al modelo Gemini para que realice la auditoría.
     Incluye revisión de buenas prácticas, estructura y documentación.
     """
-    model = genai.GenerativeModel("gemini-2.5-pro")
+    try:
+        # Inicializamos el modelo Gemini Pro 2.5
+        model = genai.GenerativeModel("gemini-2.5-pro")
 
-    prompt = f"""
+        # Construimos el prompt principal de auditoría
+        prompt = f"""
 Eres GoodDev, un asistente experto en revisión de código, arquitectura y organización de proyectos.
 Tu tarea es auditar el código recibido y devolver el resultado en **formato plano y claro**, 
 pensado para guardarse en un archivo .txt.
@@ -54,5 +56,19 @@ Cada punto debe tener una breve justificación y, si aplica, referenciar la regl
 {codigo}
 """
 
-    response = model.generate_content(prompt)
-    return response.text
+        # Llamada al modelo
+        response = model.generate_content(prompt)
+
+        # Validación del resultado
+        if not response:
+            return "⚠️ No se obtuvo respuesta del modelo (response vacío). Verificá la API Key o conexión."
+        if not hasattr(response, "text"):
+            return "⚠️ La respuesta del modelo no contiene texto. Revisa la versión de la librería o el método usado."
+        if not response.text or not response.text.strip():
+            return "⚠️ El modelo no devolvió contenido analizable. Revisá el prompt o el tamaño del código enviado."
+
+        # Retornamos el texto limpio
+        return response.text.strip()
+
+    except Exception as e:
+        return f"❌ Error durante la auditoría del código: {str(e)}"
