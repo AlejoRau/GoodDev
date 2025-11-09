@@ -5,49 +5,43 @@ def analizar_codigo(codigo, reglas, contexto, estructura):
     Envía toda la información al modelo Gemini para que realice la auditoría.
     Incluye revisión de buenas prácticas, estructura y documentación.
     """
-    model = genai.GenerativeModel("gemini-2.5-pro")
+    try:
+        # Inicializamos el modelo Gemini Pro 2.5
+        model = genai.GenerativeModel("gemini-2.5-pro")
 
-    prompt = f"""
+        # Construimos el prompt principal de auditoría
+        prompt = f"""
 Eres GoodDev, un asistente experto en revisión de código, arquitectura y organización de proyectos.
-Debes dar **respuestas breves y concisas**, no más de 5 líneas por cada observación. 
-Al lado de las observaciones negativas debes dar una sugerencia de reemplazo para el código que cumpla con las reglas de buenas prácticas,
-ya sea de la empresa o de la programación en general.Recorda en tu reespuesta no incluir caracteres especiales para separar tus respuestas simplemente ofrece un interlineado y devolve texto plano.
+Tu tarea es auditar el código recibido y devolver el resultado en **formato plano y claro**, 
+pensado para guardarse en un archivo .txt.
 
-El orden de observaciones debe ser:
-1 🔴 Errores graves  
-2 🟡 Advertencias o mejoras sugeridas  
-3 🟢 Buenas prácticas cumplidas  
+🎯 Objetivo:
+Identificar errores, sugerir mejoras y generar el código corregido correspondiente,
+listo para copiar y pegar. No uses colores ni símbolos especiales, solo texto plano.
 
-Cada vez que digas que incumple una regla, **incluye el texto de la regla violada**.
-Los puntos verdes deben ser sobre generalidades, no sobre detalles individuales.
+=== FORMATO DE RESPUESTA REQUERIDO ===
 
-Luego de revisar las buenas prácticas, **debes agregar una nueva sección obligatoria al final** titulada:
+1 Sección: CODIGO CORREGIDO
+- Mostrá únicamente los fragmentos o líneas que deberían cambiarse, dentro de un bloque de código markdown.
+- No incluyas todo el archivo, solo lo que deba reemplazarse.
 
-📘 DOCUMENTACIÓN PROPUESTA
+2 Sección: PROBLEMAS DETECTADOS
+- Listá cada error o mejora con su respectiva categoría:
+    🔴 (GRAVE): Mala práctica, error crítico o vulnerabilidad.
+    🟡 (MEDIA): Mejora sugerida, advertencia, código redundante o poco claro.
+    🟢 (BUENA): Buenas prácticas detectadas o aspectos positivos.
 
-En esa sección:
-- Si el código **no tiene documentación**, genera una propuesta de documentación completa siguiendo las reglas del equipo si existen, 
-  o el formato estándar de docstrings (Google o NumPy style).
-- Si la documentación **existe pero no cumple las reglas**, explica brevemente qué falla y muestra una versión corregida.
-- Si la documentación **ya es correcta**, escribe una breve frase que lo indique igualmente dentro de esa sección.
-- No omitas esta sección bajo ninguna circunstancia.
+Cada punto debe tener una breve justificación y, si aplica, referenciar la regla que se violó.
 
-Revision de ortografia:
-Luego de generar una respuesta debes revisar que tenga una correcta gramatica y que no estes generando caracteres que no deben ser incluidos.
+3 Sección: DOCUMENTACION PROPUESTA
+- Si el código no tiene documentación, generá una propuesta.
+- Si existe pero no cumple las reglas, mostrá una versión corregida.
+- Si ya está correcta, indicalo explícitamente.
 
-
-Debes revisar el proyecto considerando:
-1. Las reglas internas del equipo (prioritarias)
-2. Las buenas prácticas generales de programación y arquitectura
-3. El contexto del proyecto (para entender su dominio y propósito)
-4. La estructura de carpetas y archivos del proyecto
-
-
-
-Clasifica tus observaciones usando emojis:
-🔴 Error grave o mala práctica importante  
-🟡 Advertencia o mejora sugerida  
-🟢 Buena práctica cumplida  
+📘 IMPORTANTE:
+- Evitá caracteres de formato innecesarios (tablas, símbolos raros o delimitadores).
+- La respuesta debe ser solo texto con interlineado.
+- Revisá la gramática y ortografía antes de finalizar.
 
 === CONTEXTO DEL PROYECTO ===
 {contexto}
@@ -58,9 +52,23 @@ Clasifica tus observaciones usando emojis:
 === ESTRUCTURA DE DIRECTORIOS ===
 {estructura}
 
-=== CÓDIGO A ANALIZAR ===
+=== CODIGO A ANALIZAR ===
 {codigo}
 """
 
-    response = model.generate_content(prompt)
-    return response.text
+        # Llamada al modelo
+        response = model.generate_content(prompt)
+
+        # Validación del resultado
+        if not response:
+            return "⚠️ No se obtuvo respuesta del modelo (response vacío). Verificá la API Key o conexión."
+        if not hasattr(response, "text"):
+            return "⚠️ La respuesta del modelo no contiene texto. Revisa la versión de la librería o el método usado."
+        if not response.text or not response.text.strip():
+            return "⚠️ El modelo no devolvió contenido analizable. Revisá el prompt o el tamaño del código enviado."
+
+        # Retornamos el texto limpio
+        return response.text.strip()
+
+    except Exception as e:
+        return f"❌ Error durante la auditoría del código: {str(e)}"
