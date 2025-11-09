@@ -48,4 +48,4 @@ flowchart TD
 
 
 Prueba 
- Sección de prueba para crear PR desde consola. Y cambios
+ Sección de prueba para crear PR desde consola. Y cambios automatcios

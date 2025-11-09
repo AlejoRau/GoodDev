@@ -34,7 +34,7 @@ class UserController {
       this.users[index] = req.body;
       res.send("Actualizadoo"); 
     } else {
-      res.send("No encontrado"); 
+      res.send("No encontrados"); 
     }
   }
 
