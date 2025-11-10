@@ -30,10 +30,14 @@ jobs:
       - name: Instalar dependencias
         run: pip install rich python-dotenv google-generativeai
 
-      - name: Extraer diff del PR
+      - name: Extraer diff del PR (robusto)
         run: |
-          git fetch origin +refs/pull/${{ github.event.pull_request.number }}/merge
-          git diff FETCH_HEAD^ FETCH_HEAD > code.js
+          git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
+          git diff origin/main...pr-${{ github.event.pull_request.number }} > code.js
+
+          echo "== Código extraído del PR =="
+          head -n 20 code.js || echo "⚠️ No se generó diff (quizás no hubo cambios)"
+
 
       - name: Ejecutar análisis con GoodDev
         env:
