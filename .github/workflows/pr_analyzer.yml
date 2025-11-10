@@ -16,9 +16,9 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
         with:
-        fetch-depth: 0      
-        ref: ${{ github.event.pull_request.head.ref }}
-        repository: ${{ github.repository }}
+          fetch-depth: 0      
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
 
 
       - name: Configurar entorno
