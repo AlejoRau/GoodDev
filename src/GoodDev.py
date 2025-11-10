@@ -9,15 +9,14 @@ from .Utils.utils import cargar_cache, guardar_cache, hash_string
 from .analyzer import analizar_codigo
 
 # === CONFIGURACIÓN ===
-load_dotenv()
-#API_KEY = os.getenv("GOOGLE_API_KEY")
-API_KEY = "AIzaSyBTVGsfvoys5SIdzJDMRJ5_unUkR_2atyw"  # Clave fija para pruebas locales
+load_dotenv()  # Carga .env si estás corriendo localmente
+API_KEY = os.getenv("GOOGLE_API_KEY")
+
 console = Console()
 
 if not API_KEY:
-    console.print("❌ No se encontró la API Key. Asegúrate de tener el archivo .env con GOOGLE_API_KEY.", style="red")
-    exit()
-
+    console.print("⚠️ GOOGLE_API_KEY no encontrada. Verificá tus secrets o .env.", style="yellow")
+    exit(1)
 
 import google.generativeai as genai
 genai.configure(api_key=API_KEY)
