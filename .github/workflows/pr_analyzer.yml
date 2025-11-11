@@ -34,14 +34,45 @@ jobs:
 
       - name: Instalar dependencias
         run: pip install rich python-dotenv google-generativeai
-
-      - name: Extraer diff del PR (robusto)
+      - name: Extraer diffs por archivo (con contexto y estructura)
         run: |
-          git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
-          git diff origin/main...pr-${{ github.event.pull_request.number }} > code.js
+          echo "📂 Generando diffs individuales con contexto..."
 
-          echo "== Código extraído del PR =="
-          head -n 20 code.js || echo "⚠️ No se generó diff (quizás no hubo cambios)"
+          git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
+
+          mkdir -p diffs
+
+          # Obtener lista de archivos modificados
+          git diff --name-only origin/main...pr-${{ github.event.pull_request.number }} > changed_files.txt
+
+          echo "== Archivos modificados detectados =="
+          cat changed_files.txt || echo "⚠️ No se detectaron cambios"
+
+          # Para cada archivo, generar su diff con 15 líneas de contexto
+          while read file; do
+            if [ -f "$file" ]; then
+              echo "📄 Procesando $file"
+              mkdir -p "$(dirname "diffs/$file")"
+              git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$file" > "diffs/${file}.diff" || true
+            fi
+          done < changed_files.txt
+
+          # Combinar todos los diffs en un solo archivo plano para Gemini
+          echo "=== CAMBIOS DETECTADOS ===" > code_changes.txt
+          for diff_file in $(find diffs -type f -name '*.diff'); do
+            echo "\n===== ARCHIVO: ${diff_file#diffs/} =====" >> code_changes.txt
+            cat "$diff_file" >> code_changes.txt
+            echo "\n----------------------------------------" >> code_changes.txt
+          done
+
+          echo "== Muestra del archivo combinado =="
+          head -n 40 code_changes.txt
+
+          # Guardar estructura del proyecto (hasta 2 niveles)
+          echo "== Estructura del proyecto ==" > estructura.txt
+          find . -maxdepth 2 -type f | grep -vE '(\.git|__pycache__|node_modules)' >> estructura.txt
+          head -n 30 estructura.txt
+
 
 
       - name: Ejecutar análisis con GoodDev
