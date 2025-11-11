@@ -49,7 +49,7 @@ def main():
 
     # --- Leer archivos ---
     reglas = leer_archivo("src/Rules/rules.txt")
-    codigo = leer_archivo("code.js")
+    codigo = leer_archivo("code_changes.txt")
     contexto = leer_archivo("src/Rules/context.txt")
 
     # --- DEBUG: Mostrar contenido parcial ---
