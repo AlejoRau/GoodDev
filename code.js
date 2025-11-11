@@ -49,3 +49,10 @@ const controller = new UserController();
 app.post("/users", (req, res) => controller.addUser(req, res));
 app.get("/users", (req, res) => controller.getAllUsers(req, res));
 app.get("/users/:id", (req, res) => controller.getUserById(req, res));
+
+
+app.put("/users/:id", (req, res) => controller.updateUser(req, res));
+app.delete("/users/:id", (req, res) => controller.deleteUser(req, res));
+app.listen(3000, () => console.log("Servidor corriendo en puerto 3000"));
+// devguardian: endignore
+module.exports = app;

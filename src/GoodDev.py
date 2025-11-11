@@ -89,8 +89,5 @@ def main():
     console.print("\n✅ Análisis completado. Resultado guardado en pull_request.log\n", style="bold cyan")
 
 
-# ==============================
-# PUNTO DE ENTRADA
-# ==============================
 if __name__ == "__main__":
     main()
