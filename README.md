@@ -34,16 +34,5 @@ Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el
 
 ---
 
-## ⚙️ Flujo de Trabajo del Auditor
-
-```mermaid
-flowchart TD
-    A[Creación o actualización de PR] --> B[GitHub Actions ejecuta el workflow]
-    B --> C[Se extrae el diff del código]
-    C --> D[Se envía el código a GoodDev.py]
-    D --> E[Analyzer analiza el código con IA]
-    E --> F[Se genera el informe final]
-    F --> H[El bot comenta automáticamente las sugerencias]
-
-
+dont know
 
