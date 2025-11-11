@@ -33,39 +33,35 @@ jobs:
       - name: 📦 Instalar dependencias
         run: pip install rich python-dotenv google-generativeai
 
-      - name: 🔍 Extraer todos los archivos modificados con contexto
+      - name: Extraer cambios del PR con contexto
         run: |
           echo "📄 Extrayendo cambios del PR con contexto..."
-
-          # Crear rama temporal del PR
+          
           git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
 
-          # Archivos de salida
-          > changed_files.txt
+          # Archivo donde se guardará el diff contextual
           > code_changes.txt
 
-          # Detectar archivos modificados respecto a main
           CHANGED_FILES=$(git diff --name-only origin/main...pr-${{ github.event.pull_request.number }})
 
           if [ -z "$CHANGED_FILES" ]; then
-            echo "⚠️ No se detectaron archivos modificados." | tee code_changes.txt
+            echo "⚠️ No se detectaron archivos modificados." > code_changes.txt
           else
-            echo "📂 Archivos modificados detectados
-                        echo "📂 Archivos modificados detectados:" | tee -a changed_files.txt
             for FILE in $CHANGED_FILES; do
-              echo " - $FILE" | tee -a changed_files.txt
-
-              echo "\n\n===============================" >> code_changes.txt
-              echo "📄 Archivo: $FILE" >> code_changes.txt
-              echo "===============================" >> code_changes.txt
-
-              # Extraer cambios con contexto extendido (15 líneas antes/después)
-              git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$FILE" >> code_changes.txt
+              {
+                echo ""
+                echo "==============================="
+                echo "📄 Archivo: $FILE"
+                echo "==============================="
+                # 15 líneas de contexto por cambio
+                git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$FILE"
+              } >> code_changes.txt
             done
           fi
 
-          echo "✅ Cambios extraídos:"
+          echo "✅ Cambios extraídos (vista previa):"
           head -n 40 code_changes.txt || true
+
 
       - name: 📁 Generar estructura del proyecto
         run: |
