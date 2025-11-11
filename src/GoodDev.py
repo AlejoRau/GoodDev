@@ -51,16 +51,13 @@ def main():
         console.print("❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
         return
 
-    # --- Limpieza de código (por si el diff trae símbolos o ruido) ---
+   
     codigo_filtrado = limpiar_codigo(codigo)
 
-    # Obtener estructura local del proyecto por si no se generó el archivo
+  
     if not estructura:
         estructura = obtener_estructura_directorios(".")
 
-    # ==============================
-    # CARGAR / GUARDAR CACHE
-    # ==============================
     cache = cargar_cache()
     code_hash = hash_string(codigo_filtrado)
 
@@ -89,8 +86,6 @@ def main():
     console.print("\n✅ Análisis completado. Resultado guardado en pull_request.log\n", style="bold cyan")
 
 
-# ==============================
-# PUNTO DE ENTRADA
-# ==============================
+
 if __name__ == "__main__":
     main()
