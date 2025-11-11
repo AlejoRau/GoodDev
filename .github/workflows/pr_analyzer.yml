@@ -13,72 +13,79 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: 🧾 Checkout código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0      
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.repository }}
 
-      - name: Configurar entorno
+      - name: ⚙️ Configurar entorno
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
 
-      - name: Configurar Python
+      - name: 🐍 Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Instalar dependencias
+      - name: 📦 Instalar dependencias
         run: pip install rich python-dotenv google-generativeai
 
-      - name: Extraer cambios del PR con contexto
+      - name: 🔍 Extraer todos los archivos modificados con contexto
         run: |
           echo "📄 Extrayendo cambios del PR con contexto..."
-          
+
           # Crear rama temporal del PR
           git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
 
-          # Archivo donde se guardará el diff contextual
+          # Archivos de salida
+          > changed_files.txt
           > code_changes.txt
 
-          # Extraer nombres de archivos modificados
+          # Detectar archivos modificados respecto a main
           CHANGED_FILES=$(git diff --name-only origin/main...pr-${{ github.event.pull_request.number }})
 
-          # Si no hay archivos modificados, registrar aviso
           if [ -z "$CHANGED_FILES" ]; then
-            echo "⚠️ No se detectaron archivos modificados." > code_changes.txt
+            echo "⚠️ No se detectaron archivos modificados." | tee code_changes.txt
           else
+            echo "📂 Archivos modificados detectados
+                        echo "📂 Archivos modificados detectados:" | tee -a changed_files.txt
             for FILE in $CHANGED_FILES; do
+              echo " - $FILE" | tee -a changed_files.txt
+
               echo "\n\n===============================" >> code_changes.txt
-              echo "📂 Archivo: $FILE" >> code_changes.txt
+              echo "📄 Archivo: $FILE" >> code_changes.txt
               echo "===============================" >> code_changes.txt
 
-              # Extraer los cambios con 15 líneas de contexto
+              # Extraer cambios con contexto extendido (15 líneas antes/después)
               git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$FILE" >> code_changes.txt
             done
           fi
 
+          echo "✅ Cambios extraídos:"
           head -n 40 code_changes.txt || true
 
-      - name: Obtener estructura del proyecto
+      - name: 📁 Generar estructura del proyecto
         run: |
           echo "📁 Generando estructura del proyecto..."
-          tree -L 2 -I '.git|__pycache__|env|venv|node_modules' > estructura.txt || echo "Sin estructura generada"
+          tree -L 3 -I '.git|__pycache__|env|venv|node_modules' > estructura.txt || echo "Sin estructura generada"
 
-      - name: Ejecutar análisis con GoodDev
+      - name: 🤖 Ejecutar GoodDev Analyzer
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python3 -m src.GoodDev | tee $GITHUB_WORKSPACE/pull_request.log
+        run: |
+          echo "🚀 Iniciando análisis GoodDev..."
+          python3 -m src.GoodDev | tee $GITHUB_WORKSPACE/pull_request.log
 
-      - name: Subir log como artifact
+      - name: 📤 Subir log como artifact
         uses: actions/upload-artifact@v4
         with:
           name: pull_request_log
           path: ${{ github.workspace }}/pull_request.log
 
-      - name: Comentar resultado en el PR
+      - name: 💬 Comentar resultado en el PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: ${{ github.workspace }}/pull_request.log
