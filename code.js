@@ -41,6 +41,17 @@ class UserController {
   deleteUser(req, res) {
     this.users = this.users.filter(u => u.id != req.params.id);
     res.send("Usuario eliminado."); 
+  
+  }
+
+  controlesuer(req, res) {
+    const index = this.users.findIndex(u => u.id == req.params.id);
+    if (index != -1) {
+      this.users[index] = req.body;
+      res.send("Actualizadoo"); 
+    } else {
+      res.send("No encontrado"); 
+    }
   }
 }
 
@@ -51,8 +62,3 @@ app.get("/users", (req, res) => controller.getAllUsers(req, res));
 app.get("/users/:id", (req, res) => controller.getUserById(req, res));
 
 
-app.put("/users/:id", (req, res) => controller.updateUser(req, res));
-app.delete("/users/:id", (req, res) => controller.deleteUser(req, res));
-app.listen(3000, () => console.log("Servidor corriendo en puerto 3000"));
-// devguardian: endignore
-module.exports = app;
