@@ -32,6 +32,40 @@ genai.configure(api_key=API_KEY)
 
 
 # ==============================
+# FUNCIONES EXTRA: AGRUPAR ERRORES Y PUNTAJE
+# ==============================
+def agrupar_errores_por_archivo(texto_resultado):
+    """
+    Busca patrones de error en el resultado y los agrupa por archivo.
+    Se asume que cada error puede tener un '📂 Archivo:' en el diff o contexto.
+    """
+    grupos = {}
+    archivo_actual = "general"
+
+    for linea in texto_resultado.splitlines():
+        if linea.strip().startswith("📂 Archivo:"):
+            archivo_actual = linea.strip().split("📂 Archivo:")[-1].strip()
+            if archivo_actual not in grupos:
+                grupos[archivo_actual] = []
+        elif any(lvl in linea for lvl in ["🔴", "🟡", "🟢"]):
+            grupos.setdefault(archivo_actual, []).append(linea.strip())
+
+    return grupos
+
+
+def calcular_puntaje(texto_resultado):
+    """
+    Calcula un puntaje del PR en base a la cantidad de errores graves, medios y buenas prácticas detectadas.
+    """
+    graves = texto_resultado.count("🔴")
+    medias = texto_resultado.count("🟡")
+    buenas = texto_resultado.count("🟢")
+
+    puntaje = 100 - (graves * 10) - (medias * 5) + (buenas * 2)
+    return max(0, min(100, puntaje))
+
+
+# ==============================
 # FUNCIÓN PRINCIPAL
 # ==============================
 def main():
@@ -39,7 +73,7 @@ def main():
 
     # --- DEBUG: Verificación de existencia ---
     console.print("🔍 Verificando archivos necesarios...\n", style="bold yellow")
-    archivos = ["src/Rules/rules.txt", "code_changes.txt", "src/Rules/contexto.txt"]
+    archivos = ["src/Rules/rules.txt", "code_changes.txt", "src/Rules/context.txt"]
     for ruta in archivos:
         if not os.path.exists(ruta):
             console.print(f"❌ No existe: {ruta}", style="red")
@@ -78,16 +112,31 @@ def main():
         cache["analysis_result"] = resultado
         guardar_cache(cache)
 
+    # ==============================
+    # NUEVAS FUNCIONALIDADES
+    # ==============================
+    console.print("\n📊 Procesando resumen por archivo y puntaje...\n", style="bold yellow")
+
+    grupos = agrupar_errores_por_archivo(resultado)
+    puntaje = calcular_puntaje(resultado)
+
+    resultado_final = resultado
+    resultado_final += "\n\n=== ERRORES DETECTADOS POR ARCHIVO ===\n"
+    for archivo, errores in grupos.items():
+        resultado_final += f"\n📁 {archivo}\n"
+        for e in errores:
+            resultado_final += f"  {e}\n"
+
+    resultado_final += f"\n\n🧾 PUNTAJE GLOBAL DEL PR: {puntaje} / 100\n"
+
+    # Mostrar y guardar
     console.print("\n===== RESULTADO DEL ANÁLISIS =====", style="bold white")
-    console.print(resultado, style="white")
+    console.print(resultado_final, style="white")
 
-
-    # Guardar log para el comentario automático en el PR
     with open("pull_request.log", "w", encoding="utf-8") as log:
-        log.write(resultado)
+        log.write(resultado_final)
 
     console.print("\n✅ Análisis completado. Resultado guardado en pull_request.log\n", style="bold cyan")
-
 
 
 if __name__ == "__main__":
