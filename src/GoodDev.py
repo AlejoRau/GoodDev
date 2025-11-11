@@ -39,7 +39,7 @@ def main():
 
     # --- DEBUG: Verificación de existencia ---
     console.print("🔍 Verificando archivos necesarios...\n", style="bold yellow")
-    archivos = ["src/Rules/rules.txt", "code.js", "src/Rules/contexto.txt"]
+    archivos = ["src/Rules/rules.txt", "code_changes.txt", "src/Rules/contexto.txt"]
     for ruta in archivos:
         if not os.path.exists(ruta):
             console.print(f"❌ No existe: {ruta}", style="red")
@@ -55,7 +55,7 @@ def main():
     # --- DEBUG: Mostrar contenido parcial ---
     console.print("\n🧠 DEBUG: Vista previa de archivos cargados:", style="bold yellow")
     console.print(f"rules.txt → {len(reglas)} caracteres", style="cyan")
-    console.print(f"code.js → {len(codigo)} caracteres", style="cyan")
+    console.print(f"code_changes.txt → {len(codigo)} caracteres", style="cyan")
     console.print(f"contexto.txt → {len(contexto)} caracteres", style="cyan")
 
     if not reglas or not codigo or not contexto:
