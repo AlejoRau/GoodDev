@@ -20,12 +20,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.repository }}
 
-
       - name: Configurar entorno
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
+        run: echo "GOOGLE_API_KEY=${GOOGLE_API_KEY}" > .env
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -34,46 +32,40 @@ jobs:
 
       - name: Instalar dependencias
         run: pip install rich python-dotenv google-generativeai
-      - name: Extraer diffs por archivo (con contexto y estructura)
-        run: |
-          echo "📂 Generando diffs individuales con contexto..."
 
+      - name: Extraer cambios del PR con contexto
+        run: |
+          echo "📄 Extrayendo cambios del PR con contexto..."
+          
+          # Crear rama temporal del PR
           git fetch origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
 
-          mkdir -p diffs
+          # Archivo donde se guardará el diff contextual
+          > code_changes.txt
 
-          # Obtener lista de archivos modificados
-          git diff --name-only origin/main...pr-${{ github.event.pull_request.number }} > changed_files.txt
+          # Extraer nombres de archivos modificados
+          CHANGED_FILES=$(git diff --name-only origin/main...pr-${{ github.event.pull_request.number }})
 
-          echo "== Archivos modificados detectados =="
-          cat changed_files.txt || echo "⚠️ No se detectaron cambios"
+          # Si no hay archivos modificados, registrar aviso
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "⚠️ No se detectaron archivos modificados." > code_changes.txt
+          else
+            for FILE in $CHANGED_FILES; do
+              echo "\n\n===============================" >> code_changes.txt
+              echo "📂 Archivo: $FILE" >> code_changes.txt
+              echo "===============================" >> code_changes.txt
 
-          # Para cada archivo, generar su diff con 15 líneas de contexto
-          while read file; do
-            if [ -f "$file" ]; then
-              echo "📄 Procesando $file"
-              mkdir -p "$(dirname "diffs/$file")"
-              git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$file" > "diffs/${file}.diff" || true
-            fi
-          done < changed_files.txt
+              # Extraer los cambios con 15 líneas de contexto
+              git diff -U15 origin/main...pr-${{ github.event.pull_request.number }} -- "$FILE" >> code_changes.txt
+            done
+          fi
 
-          # Combinar todos los diffs en un solo archivo plano para Gemini
-          echo "=== CAMBIOS DETECTADOS ===" > code_changes.txt
-          for diff_file in $(find diffs -type f -name '*.diff'); do
-            echo "\n===== ARCHIVO: ${diff_file#diffs/} =====" >> code_changes.txt
-            cat "$diff_file" >> code_changes.txt
-            echo "\n----------------------------------------" >> code_changes.txt
-          done
+          head -n 40 code_changes.txt || true
 
-          echo "== Muestra del archivo combinado =="
-          head -n 40 code_changes.txt
-
-          # Guardar estructura del proyecto (hasta 2 niveles)
-          echo "== Estructura del proyecto ==" > estructura.txt
-          find . -maxdepth 2 -type f | grep -vE '(\.git|__pycache__|node_modules)' >> estructura.txt
-          head -n 30 estructura.txt
-
-
+      - name: Obtener estructura del proyecto
+        run: |
+          echo "📁 Generando estructura del proyecto..."
+          tree -L 2 -I '.git|__pycache__|env|venv|node_modules' > estructura.txt || echo "Sin estructura generada"
 
       - name: Ejecutar análisis con GoodDev
         env:
