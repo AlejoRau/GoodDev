@@ -37,30 +37,34 @@ genai.configure(api_key=API_KEY)
 def main():
     console.print("🚀 Iniciando GoodDev: Auditor de código y arquitectura\n", style="bold cyan")
 
-    # Leer reglas y contexto general del proyecto
+    # --- DEBUG: Verificación de existencia ---
+    console.print("🔍 Verificando archivos necesarios...\n", style="bold yellow")
+    archivos = ["src/Rules/rules.txt", "code.js", "src/Rules/contexto.txt"]
+    for ruta in archivos:
+        if not os.path.exists(ruta):
+            console.print(f"❌ No existe: {ruta}", style="red")
+        else:
+            size = os.path.getsize(ruta)
+            console.print(f"✅ {ruta} encontrado ({size} bytes)", style="green")
+
+    # --- Leer archivos ---
     reglas = leer_archivo("src/Rules/rules.txt")
+    codigo = leer_archivo("code.js")
     contexto = leer_archivo("src/Rules/contexto.txt")
 
-    # Leer estructura del proyecto (generada por el workflow)
-    estructura = leer_archivo("estructura.txt")
+    # --- DEBUG: Mostrar contenido parcial ---
+    console.print("\n🧠 DEBUG: Vista previa de archivos cargados:", style="bold yellow")
+    console.print(f"rules.txt → {len(reglas)} caracteres", style="cyan")
+    console.print(f"code.js → {len(codigo)} caracteres", style="cyan")
+    console.print(f"contexto.txt → {len(contexto)} caracteres", style="cyan")
 
-    # Leer código modificado (solo cambios del PR, con contexto)
-    codigo = leer_archivo("code_changes.txt")
-
-    if not codigo or not reglas or not contexto:
-        console.print("❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
+    if not reglas or not codigo or not contexto:
+        console.print("\n❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
         return
 
-    # --- Limpieza de código (por si el diff trae símbolos o ruido) ---
+    # --- Bloque de análisis ---
     codigo_filtrado = limpiar_codigo(codigo)
-
-    # Obtener estructura local del proyecto por si no se generó el archivo
-    if not estructura:
-        estructura = obtener_estructura_directorios(".")
-
-    # ==============================
-    # CARGAR / GUARDAR CACHE
-    # ==============================
+    estructura = obtener_estructura_directorios(".")
     cache = cargar_cache()
     code_hash = hash_string(codigo_filtrado)
 
@@ -68,19 +72,15 @@ def main():
         console.print("🟢 El código no cambió, usando análisis previo", style="green")
         resultado = cache.get("analysis_result", "⚠️ No hay análisis previo guardado")
     else:
-        console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold yellow")
+        console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
         resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura)
-
-        # Guardar hash y resultado
         cache["code_hash"] = code_hash
         cache["analysis_result"] = resultado
         guardar_cache(cache)
 
-    # ==============================
-    # RESULTADOS
-    # ==============================
     console.print("\n===== RESULTADO DEL ANÁLISIS =====", style="bold white")
     console.print(resultado, style="white")
+
 
     # Guardar log para el comentario automático en el PR
     with open("pull_request.log", "w", encoding="utf-8") as log:
