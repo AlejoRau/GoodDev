@@ -53,7 +53,20 @@ class UserController {
       res.send("No encontrado"); 
     }
   }
+
+  controlesuer(req, res) {
+    const index = this.users.findIndex(u => u.id == req.params.id);
+    if (index != -1) {
+      this.users[index] = req.body;
+      res.send("Actualizadoo"); 
+    } else {
+      res.send("No encontrado"); 
+    }
+  }
+
 }
+
+
 
 const controller = new UserController();
 
