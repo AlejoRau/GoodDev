@@ -16,9 +16,9 @@ from .analyzer import analizar_codigo
 
 import google.generativeai as genai
 
-# ==============================
+
 # CONFIGURACIÓN INICIAL
-# ==============================
+
 load_dotenv()  
 API_KEY = os.getenv("GOOGLE_API_KEY")
 

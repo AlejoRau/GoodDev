@@ -140,17 +140,4 @@ El workflow se ejecutará automáticamente y dejará un **comentario con el info
 
 ---
 
-## 📊 Ejemplo de Comentario del Auditor
-
-```
-===== RESULTADO DEL ANÁLISIS =====
-
-Archivo: src/utils.py
-❌ Falta docstring en función leer_archivo()
-⚠️ Variable sin usar: 'data'
-
-Archivo: src/analyzer.py
-✅ Buen uso de separación lógica y consistencia de estilo.
-
-📊 Puntaje total del PR: 8.5 / 10
-```
+Comentar para generar PULL REQUEST
