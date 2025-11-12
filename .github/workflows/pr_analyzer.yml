@@ -81,9 +81,18 @@ jobs:
           name: pull_request_log
           path: ${{ github.workspace }}/pull_request.log
 
-      - name: 💬 Comentar resultado en el PR
+      - name: Verificar archivo de log
+        run: |
+          echo "📄 Comprobando existencia de pull_request.log..."
+          ls -l ${{ github.workspace }} || true
+          if [ ! -f "${{ github.workspace }}/pull_request.log" ]; then
+            echo "❌ No se encontró pull_request.log"
+            exit 1
+          fi
+
+      - name: Comentar resultado en el PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ${{ github.workspace }}/pull_request.log
+          path: pull_request.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

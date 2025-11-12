@@ -21,6 +21,7 @@ Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 code_changes.txt
+pull_request.log
 .vscode/
 .idea/
 *.sublime-workspace
