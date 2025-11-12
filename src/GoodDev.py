@@ -1,22 +1,23 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from rich.console import Console
 from dotenv import load_dotenv
+import google.generativeai as genai
+
+# Ajuste de path para importar módulos internos
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from .Utils.utils import (
     leer_archivo,
     limpiar_codigo,
-    obtener_estructura_directorios,
+    obtener_estructura_directorios
 )
 from .analyzer import analizar_codigo
-
-import google.generativeai as genai
 
 # ==============================
 # CONFIGURACIÓN INICIAL
 # ==============================
-load_dotenv()  
+load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 
 console = Console()
@@ -28,13 +29,13 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 
 
-
-# FUNCIONES EXTRA: AGRUPAR ERRORES Y PUNTAJE
+# ==============================
+# FUNCIONES AUXILIARES
+# ==============================
 
 def agrupar_errores_por_archivo(texto_resultado):
     """
-    Busca patrones de error en el resultado y los agrupa por archivo.
-    Se asume que cada error puede tener un '📂 Archivo:' en el diff o contexto.
+    Agrupa errores por archivo detectando líneas con '📂 Archivo:'.
     """
     grupos = {}
     archivo_actual = "general"
@@ -42,8 +43,7 @@ def agrupar_errores_por_archivo(texto_resultado):
     for linea in texto_resultado.splitlines():
         if linea.strip().startswith("📂 Archivo:"):
             archivo_actual = linea.strip().split("📂 Archivo:")[-1].strip()
-            if archivo_actual not in grupos:
-                grupos[archivo_actual] = []
+            grupos.setdefault(archivo_actual, [])
         elif any(lvl in linea for lvl in ["🔴", "🟡", "🟢"]):
             grupos.setdefault(archivo_actual, []).append(linea.strip())
 
@@ -52,7 +52,7 @@ def agrupar_errores_por_archivo(texto_resultado):
 
 def calcular_puntaje(texto_resultado):
     """
-    Calcula un puntaje del PR en base a la cantidad de errores graves, medios y buenas prácticas detectadas.
+    Calcula un puntaje del PR según la cantidad de errores graves, medios y buenas prácticas.
     """
     graves = texto_resultado.count("🔴")
     medias = texto_resultado.count("🟡")
@@ -62,11 +62,14 @@ def calcular_puntaje(texto_resultado):
     return max(0, min(100, puntaje))
 
 
+# ==============================
+# PROCESO PRINCIPAL
+# ==============================
 
 def main():
     console.print("🚀 Iniciando GoodDev: Auditor de código y arquitectura\n", style="bold cyan")
 
-    # --- DEBUG: Verificación de existencia ---
+    # Verificar archivos necesarios
     console.print("🔍 Verificando archivos necesarios...\n", style="bold yellow")
     archivos = ["src/Rules/rules.txt", "code_changes.txt", "src/Rules/context.txt"]
     for ruta in archivos:
@@ -76,12 +79,10 @@ def main():
             size = os.path.getsize(ruta)
             console.print(f"✅ {ruta} encontrado ({size} bytes)", style="green")
 
-   
     reglas = leer_archivo("src/Rules/rules.txt")
     codigo = leer_archivo("code_changes.txt")
     contexto = leer_archivo("src/Rules/context.txt")
 
-    # --- DEBUG: Mostrar contenido parcial ---
     console.print("\n🧠 DEBUG: Vista previa de archivos cargados:", style="bold yellow")
     console.print(f"rules.txt → {len(reglas)} caracteres", style="cyan")
     console.print(f"code_changes.txt → {len(codigo)} caracteres", style="cyan")
@@ -91,17 +92,11 @@ def main():
         console.print("\n❌ Faltan archivos o están vacíos. No se puede continuar.", style="red")
         return
 
-    # --- Bloque de análisis ---
+    console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
     codigo_filtrado = limpiar_codigo(codigo)
     estructura = obtener_estructura_directorios(".")
-
-    console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
     resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura)
-        
 
-    
-    # Puntaje de Calidad y Resumen
-    
     console.print("\n📊 Procesando resumen por archivo y puntaje...\n", style="bold yellow")
 
     grupos = agrupar_errores_por_archivo(resultado)
@@ -116,7 +111,6 @@ def main():
 
     resultado_final += f"\n\n🧾 PUNTAJE GLOBAL DEL PR: {puntaje} / 100\n"
 
-    # Mostrar y guardar
     console.print("\n===== RESULTADO DEL ANÁLISIS =====", style="bold white")
     console.print(resultado_final, style="white")
 

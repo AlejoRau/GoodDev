@@ -1,6 +1,4 @@
-import os, json, hashlib
-
-CACHE_FILE = ".gooddev_cache.json"
+import os
 
 def leer_archivo(ruta):
     try:
@@ -23,5 +21,3 @@ def obtener_estructura_directorios(base_path="."):
         for f in files:
             estructura.append(f"{indent}  {f}")
     return "\n".join(estructura)
-
-
