@@ -24,15 +24,7 @@ def obtener_estructura_directorios(base_path="."):
             estructura.append(f"{indent}  {f}")
     return "\n".join(estructura)
 
-def cargar_cache():
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
 
-def guardar_cache(cache):
-    with open(CACHE_FILE, "w", encoding="utf-8") as f:
-        json.dump(cache, f, indent=2)
 
 def hash_string(s):
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
