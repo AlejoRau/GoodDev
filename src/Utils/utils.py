@@ -25,6 +25,3 @@ def obtener_estructura_directorios(base_path="."):
     return "\n".join(estructura)
 
 
-
-def hash_string(s):
-    return hashlib.sha256(s.encode("utf-8")).hexdigest()

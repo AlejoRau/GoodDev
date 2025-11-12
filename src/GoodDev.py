@@ -8,8 +8,7 @@ from .Utils.utils import (
     leer_archivo,
     limpiar_codigo,
     obtener_estructura_directorios,
-    cargar_cache,
-    guardar_cache,
+    
     hash_string
 )
 from .analyzer import analizar_codigo
@@ -97,18 +96,10 @@ def main():
     # --- Bloque de análisis ---
     codigo_filtrado = limpiar_codigo(codigo)
     estructura = obtener_estructura_directorios(".")
-    cache = cargar_cache()
-    code_hash = hash_string(codigo_filtrado)
 
-    if cache.get("code_hash") == code_hash:
-        console.print("🟢 El código no cambió, usando análisis previo", style="green")
-        resultado = cache.get("analysis_result", "⚠️ No hay análisis previo guardado")
-    else:
-        console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
-        resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura)
-        cache["code_hash"] = code_hash
-        cache["analysis_result"] = resultado
-        guardar_cache(cache)
+    console.print("\n🤖 Analizando código y estructura del proyecto...\n", style="bold cyan")
+    resultado = analizar_codigo(codigo_filtrado, reglas, contexto, estructura)
+        
 
     
     # Puntaje de Calidad y Resumen
