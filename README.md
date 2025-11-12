@@ -127,7 +127,7 @@ Debe existir el siguiente archivo en tu repositorio:
    ```bash
    git checkout -b test-gooddev
    ```
-2. Hacer un cambio pequeño en cualquier archivo:
+CAMBIOS
    ```bash
    echo "// prueba del auditor" >> index.js
    git add .
