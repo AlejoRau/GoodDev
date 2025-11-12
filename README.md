@@ -39,7 +39,7 @@ Aprender de revisiones pasadas para mejorar la calidad de sus auditorías con el
 ```mermaid
 flowchart TD
     A[Creación o actualización de PR] --> B[GitHub Actions ejecuta el workflow]
-    B --> C[Se extrae el diff del código]
+    B --> C[Se extrae el diff del código del PR]
     C --> D[Se envía el código a GoodDev.py]
     D --> E[Analyzer analiza el código con IA]
     E --> F[Se genera el informe final]
