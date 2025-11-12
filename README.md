@@ -28,19 +28,6 @@ El objetivo a futuro es evolucionar hacia un **agente autónomo ReAct**, con cap
 - **Sugerir automáticamente correcciones** o mejoras en la estructura del proyecto.  
 - **Aprender de revisiones pasadas** para mejorar la calidad de sus auditorías con el tiempo.  
 
----
-
-## ⚙️ Flujo de Trabajo del Auditor
-
-```mermaid
-flowchart TD
-    A[Creación o actualización de PR] --> B[GitHub Actions ejecuta el workflow]
-    B --> C[Se extrae el diff del código]
-    C --> D[Se envía el código a GoodDev.py]
-    D --> E[Analyzer analiza el código con IA]
-    E --> F[Se genera el informe final con errores por archivo ]
-    F --> H[El bot comenta automáticamente las sugerencias en el PR]
-```
 
 ---
 
