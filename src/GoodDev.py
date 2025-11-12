@@ -8,8 +8,6 @@ from .Utils.utils import (
     leer_archivo,
     limpiar_codigo,
     obtener_estructura_directorios,
-    
-    hash_string
 )
 from .analyzer import analizar_codigo
 
