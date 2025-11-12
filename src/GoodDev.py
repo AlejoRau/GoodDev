@@ -14,9 +14,9 @@ from .Utils.utils import (
 )
 from .analyzer import analizar_codigo
 
-# ==============================
+
 # CONFIGURACIÓN INICIAL
-# ==============================
+
 load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 
@@ -29,9 +29,9 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 
 
-# ==============================
+
 # FUNCIONES AUXILIARES
-# ==============================
+
 
 def agrupar_errores_por_archivo(texto_resultado):
     """
@@ -62,9 +62,9 @@ def calcular_puntaje(texto_resultado):
     return max(0, min(100, puntaje))
 
 
-# ==============================
+
 # PROCESO PRINCIPAL
-# ==============================
+
 
 def main():
     console.print("🚀 Iniciando GoodDev: Auditor de código y arquitectura\n", style="bold cyan")
