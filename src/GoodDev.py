@@ -65,9 +65,7 @@ def calcular_puntaje(texto_resultado):
     return max(0, min(100, puntaje))
 
 
-# ==============================
-# FUNCIÓN PRINCIPAL
-# ==============================
+
 def main():
     console.print("🚀 Iniciando GoodDev: Auditor de código y arquitectura\n", style="bold cyan")
 
@@ -81,7 +79,7 @@ def main():
             size = os.path.getsize(ruta)
             console.print(f"✅ {ruta} encontrado ({size} bytes)", style="green")
 
-    # --- Leer archivos ---
+   
     reglas = leer_archivo("src/Rules/rules.txt")
     codigo = leer_archivo("code_changes.txt")
     contexto = leer_archivo("src/Rules/context.txt")
