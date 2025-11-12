@@ -97,25 +97,8 @@ Cuando se ejecuta en un PR real, el workflow genera automáticamente el archivo 
      cp .env.example .env
      ```
 
-4. **Probar el análisis local:**
-   ```bash
-   python src/GoodDev.py
-   ```
 
-   Si todo está configurado correctamente, verás:
-   ```
-   🚀 Iniciando GoodDev: Auditor de código y arquitectura
-   ✅ Archivos encontrados
-   🤖 Analizando código...
-   ===== RESULTADO DEL ANÁLISIS =====
-   Archivo: code.js
-   ⚠️  Falta documentación en función xyz()
-   📊 Puntaje total del PR: 8.6 / 10
-   ```
-
----
-
-## 🧩 Integración con GitHub Actions (central en el proyecto)
+4.##  Integración con GitHub Actions 
 
 GoodDev fue diseñado para **trabajar automáticamente en cada Pull Request**.  
 Esto permite que los equipos integren auditorías inteligentes en su pipeline de CI/CD sin configuración manual.
