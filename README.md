@@ -154,3 +154,4 @@ Archivo: src/analyzer.py
 
 📊 Puntaje total del PR: 8.5 / 10
 ```
+modificacion del readme para que analize gooddev.
