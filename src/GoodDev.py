@@ -31,9 +31,9 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 
 
-# ==============================
+
 # FUNCIONES EXTRA: AGRUPAR ERRORES Y PUNTAJE
-# ==============================
+
 def agrupar_errores_por_archivo(texto_resultado):
     """
     Busca patrones de error en el resultado y los agrupa por archivo.
@@ -110,9 +110,9 @@ def main():
         cache["analysis_result"] = resultado
         guardar_cache(cache)
 
-    # ==============================
-    # NUEVAS FUNCIONALIDADES
-    # ==============================
+    
+    # Puntaje de Calidad y Resumen
+    
     console.print("\n📊 Procesando resumen por archivo y puntaje...\n", style="bold yellow")
 
     grupos = agrupar_errores_por_archivo(resultado)

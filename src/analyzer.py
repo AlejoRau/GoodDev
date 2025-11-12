@@ -6,10 +6,10 @@ def analizar_codigo(codigo, reglas, contexto, estructura):
     Incluye revisión de buenas prácticas, estructura y documentación.
     """
     try:
-        # Inicializamos el modelo Gemini Pro 2.5
+        
         model = genai.GenerativeModel("gemini-2.5-pro")
 
-        # Construimos el prompt principal de auditoría
+        
         prompt = f"""
 Eres GoodDev, un asistente experto en revisión de código, arquitectura y organización de proyectos.
 Tu tarea es auditar el código recibido y devolver el resultado en **formato plano y claro**, 
