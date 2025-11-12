@@ -59,7 +59,6 @@ GoodDev/
 │       ├── contexto.txt          # Contexto general del proyecto seteado por el equipo
 │
 ├── code_changes.txt              # Código modificado (generado por el workflow)
-├── code.js                       # Mock de ejemplo para pruebas locales
 ├── pull_request.log              # Resultado del análisis (comentario al PR)
 ├── requirements.txt              # Dependencias del proyecto
 ├── .env.example                  # Ejemplo del archivo de configuración de API Key
