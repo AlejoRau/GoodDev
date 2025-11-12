@@ -1,3 +1,5 @@
+//Mock Context
+
 Proyecto: User Management API
 Descripción: Este proyecto es un CRUD básico para gestionar usuarios de la plataforma interna de TechCorp.
 Objetivo: Permitir a los desarrolladores crear, leer, actualizar y eliminar usuarios mediante endpoints REST.
