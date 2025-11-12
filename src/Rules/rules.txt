@@ -1,3 +1,4 @@
+//Mock de reglas
 # Reglas internas del equipo
 
 # 1. Todas las clases de controladores deben terminar con "Controller".
