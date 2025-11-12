@@ -55,8 +55,8 @@ GoodDev/
 │   ├── Utils/
 │   │   ├── utils.py              # Funciones auxiliares (leer, limpiar, cachear)
 │   └── Rules/
-│       ├── rules.txt             # Reglas de buenas prácticas
-│       ├── contexto.txt          # Contexto general del análisis
+│       ├── rules.txt             # Reglas de buenas prácticas seteada por el equipo
+│       ├── contexto.txt          # Contexto general del proyecto seteado por el equipo
 │
 ├── code_changes.txt              # Código modificado (generado por el workflow)
 ├── code.js                       # Mock de ejemplo para pruebas locales
